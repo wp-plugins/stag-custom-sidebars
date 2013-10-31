@@ -3,7 +3,7 @@
  * Plugin Name: Stag Custom Sidebars
  * Plugin URI: http://wordpress.org/plugins/stag-custom-sidebars
  * Description: Create custom dynamic sidebars and use anywhere with shortcodes.
- * Version: 1.0
+ * Version: 1.0.1
  * Author: Ram Ratan Maurya
  * Author URI: http://mauryaratan.me
  * Requires at least: 3.3
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
  *
  * @package Stag_Custom_Sidebars
  * @author Ram Ratan Maurya
- * @version 1.0
+ * @version 1.0.1
  * @copyright 2013 Ram Ratan Maurya
  */
 class Stag_Custom_Sidebars {
@@ -30,7 +30,7 @@ class Stag_Custom_Sidebars {
 	/**
 	 * @var string
 	 */
-	public $version = '1.0';
+	public $version = '1.0.1';
 
 	/**
 	 * @var string
@@ -224,8 +224,8 @@ class Stag_Custom_Sidebars {
 		if( empty( $this->sidebars ) ) $this->sidebars = get_option($this->stored);
 
 		$args = apply_filters( 'stag_custom_sidebars_widget_args', array(
-				'before_widget' => '<div id="%1$s" class="widget %2$s">',
-				'after_widget'  => '</div>',
+				'before_widget' => '<aside id="%1$s" class="widget %2$s">',
+				'after_widget'  => '</aside>',
 				'before_title'  => '<h3 class="widgettitle">', 
 				'after_title'   => '</h3>'
 			)
@@ -233,11 +233,9 @@ class Stag_Custom_Sidebars {
 
 		if( is_array( $this->sidebars ) ) {
 			foreach( $this->sidebars as $sidebar ) {
-				$args = array(
-					'name'  => $sidebar,
-					'class' => 'stag-custom',
-					'id'    => sanitize_html_class( sanitize_title_with_dashes( $sidebar ) )
-				);
+				$args['name']  = $sidebar;
+				$args['class'] = 'stag-custom';
+				$args['id']    = sanitize_html_class( sanitize_title_with_dashes( $sidebar ) );
 				
 				register_sidebar($args);
 			}
@@ -263,9 +261,9 @@ class Stag_Custom_Sidebars {
 
 			do_action( 'stag_custom_sidebars_before', $id );
 
-			echo "<div id='{$id}' class='stag-custom-widget-area {$class}'>";
+			echo "<section id='{$id}' class='stag-custom-widget-area {$class}'>";
 			dynamic_sidebar( $id );
-			echo "</div>";
+			echo "</section>";
 			
 			do_action( 'stag_custom_sidebars_after' );
 			
