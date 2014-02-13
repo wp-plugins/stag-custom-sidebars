@@ -16,6 +16,8 @@ This plugin adds a button to widgets area to create a new sidebar area which you
 
 To display the sidebar with shortcode you can use ``[stag_sidebar id="custom-sidebar"]`` where ``id`` is the id of the sidebar that appears in the description area of the respective widget area. You can also pass an additional parameter ``class`` in shortcode to add class to the widget area wrapper on frontend.
 
+[vimeo https://vimeo.com/86626101]
+
 If you'd like to check out the code and contribute, [join us on GitHub](https://github.com/mauryaratan/stag-custom-sidebars). Pull requests, issues, and plugin recommendations are more than welcome!
 
 *Checkout our finely tuned WordPress themes over at [Codestag](http://codestag.com).*
