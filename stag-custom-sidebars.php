@@ -3,7 +3,7 @@
  * Plugin Name: Stag Custom Sidebars
  * Plugin URI: http://wordpress.org/plugins/stag-custom-sidebars
  * Description: Create custom dynamic sidebars and use anywhere with shortcodes.
- * Version: 1.0.5
+ * Version: 1.0.6
  * Author: Ram Ratan Maurya
  * Author URI: http://mauryaratan.me
  * Requires at least: 3.3
@@ -21,15 +21,21 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
  *
  * @package Stag_Custom_Sidebars
  * @author Ram Ratan Maurya
- * @version 1.0.5
+ * @version 1.0.6
  * @copyright 2013 Ram Ratan Maurya
  */
-class Stag_Custom_Sidebars {
+final class Stag_Custom_Sidebars {
+
+	/**
+	 * @var Stag_Custom_Sidebars The single instance of the class
+	 * @since 1.0.6
+	 */
+	protected static $_instance = null;
 
 	/**
 	 * @var string
 	 */
-	public $version = '1.0.5';
+	public $version = '1.0.6';
 
 	/**
 	 * @var string
@@ -53,6 +59,23 @@ class Stag_Custom_Sidebars {
 	protected $title;
 
 	/**
+	 * Main Stag_Custom_Sidebars Instance
+	 *
+	 * Ensures only one instance of Stag_Custom_Sidebars is loaded or can be loaded.
+	 *
+	 * @since 1.0.6
+	 * @static
+	 * @see SCS()
+	 * @return Stag_Custom_Sidebars - Main instance
+	 */
+	public static function instance() {
+		if ( is_null( self::$_instance ) ) {
+			self::$_instance = new self();
+		}
+		return self::$_instance;
+	}
+
+	/**
 	 * Plugin Constructor.
 	 *
 	 * @access public
@@ -73,6 +96,10 @@ class Stag_Custom_Sidebars {
 		add_action( 'wp_ajax_stag_ajax_delete_custom_sidebar', array( &$this, 'delete_sidebar_area' ) , 1000 );
 
 		add_shortcode( 'stag_sidebar', array( &$this, 'stag_sidebar_shortcode' ) );
+
+		add_filter( 'wie_unencoded_export_data', array( &$this, 'export_data' ) );
+		add_filter( 'wie_import_results', array( &$this, 'reset_custom_key' ) );
+		add_action( 'wie_import_data', array( &$this, 'before_wie_import' ) );
 	}
 
 	/**
@@ -236,7 +263,7 @@ class Stag_Custom_Sidebars {
 	 */
 	public function register_custom_sidebars() {
 
-		if( empty( $this->sidebars ) ) $this->sidebars = get_option($this->stored);
+		$sidebars = get_option($this->stored);
 
 		$args = apply_filters( 'stag_custom_sidebars_widget_args', array(
 				'before_widget' => '<aside id="%1$s" class="widget %2$s">',
@@ -246,8 +273,8 @@ class Stag_Custom_Sidebars {
 			)
 		);
 
-		if( is_array( $this->sidebars ) ) {
-			foreach( $this->sidebars as $sidebar ) {
+		if( is_array( $sidebars ) ) {
+			foreach( $sidebars as $sidebar ) {
 				$args['id']    = sanitize_title_with_dashes( $sidebar );
 				$args['name']  = $sidebar;
 				$args['class'] = 'stag-custom';
@@ -286,6 +313,91 @@ class Stag_Custom_Sidebars {
 
 		return $output;
 	}
+
+	/**
+	 * Set a custom array key in export data.
+	 *
+	 * Inject all custom sidebar areas created on site under export data of "Widget Importer and Exporter".
+	 * 
+	 * @uses Widget_Importer_Exporter
+	 * @link http://wordpress.org/plugins/widget-importer-exporter
+	 * 
+	 * @since 1.0.6
+	 * @param  array $sidebars An array containing sidebars' widget data.
+	 * @return array $sidebars Modified array, adds custom array key set during export.
+	 */
+	public function export_data( $sidebars ) {
+
+		if ( empty( $this->sidebars ) ) $this->sidebars = get_option($this->stored);
+
+		$sidebars['stag-custom-sidebars-areas'] = $this->sidebars;
+
+		return $sidebars;
+	}
+
+	/**
+	 * Delete custom array key before 'Widget Importer & Exporter' import.
+	 *
+	 * @uses Widget_Importer_Exporter
+	 * @link http://wordpress.org/plugins/widget-importer-exporter
+	 * 
+	 * @since 1.0.6
+	 * @param  array $results An array containing sidebars' widget data.
+	 * @return array $results Modified array, deletes custom array key set during export.
+	 */
+	public function reset_custom_key( $results ) {
+		unset($results['stag-custom-sidebars-areas']);
+
+		return $results;
+	}
+
+	/**
+	 * Create new sidebar areas.
+	 *
+	 * Filter widget data before widgets import. Deletes the custom key set during widget file export.
+	 * Also register new custom widgets areas.
+	 *
+	 * @global $wp_registered_sidebars
+	 * 
+	 * @param  object $data Contains widget import data.
+	 * @return array  $data Modified widget import data.
+	 */
+	function before_wie_import( $data ) {
+		global $wp_registered_sidebars;
+
+		$data = (array) $data;
+
+		$key             = 'stag-custom-sidebars-areas';
+		$sidebars        = get_option('stag_custom_sidebars');
+		$custom_sidebars = (array) $data[$key];
+
+		unset($data[$key]);
+
+		// Loop through each imported custom sidebar area and prepare it
+		// to be added in new custom sidebar areas.
+		foreach ( $custom_sidebars as $sidebar_id => $title ) {
+			if ( ! isset( $wp_registered_sidebars[$sidebar_id] ) ) {
+				$sidebars[$sidebar_id] = $title;
+			}
+		}
+
+		update_option( 'stag_custom_sidebars', $sidebars );
+
+		SCS()->register_custom_sidebars();
+
+		return $data;
+	}
 }
 
-new Stag_Custom_Sidebars();
+/**
+ * Returns the main instance of SCS to prevent the need to use globals.
+ *
+ * @since  1.0.6
+ * @return Stag_Custom_Sidebars
+ */
+function SCS() {
+	return Stag_Custom_Sidebars::instance();
+}
+
+// Global for backwards compatibility.
+$GLOBALS['stag_custom_sidebars'] = SCS();
