@@ -3,8 +3,8 @@ Contributors: mauryaratan, codestag
 Donate link: http://codest.ag/scs-donate
 Tags: sidebars, custom-sidebars, mauryaratan, codestag, shortcodes, widgets
 Requires at least: 3.3
-Stable tag: 1.0.6
-Tested up to: 3.9
+Stable tag: 1.0.7
+Tested up to: 4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
