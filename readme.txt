@@ -3,7 +3,7 @@ Contributors: mauryaratan, codestag
 Donate link: http://codest.ag/scs-donate
 Tags: sidebars, custom-sidebars, mauryaratan, codestag, shortcodes, widgets
 Requires at least: 3.3
-Stable tag: 1.0.7
+Stable tag: 1.0.8
 Tested up to: 4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -61,6 +61,9 @@ Bugs can be reported either in our support forum or preferably on the [Stag Cust
 2. As usual, new widget area appears to right of the screen along with a button to delete the widget area with a shortcode in description to use it anywhere.
 
 == Changelog ==
+
+= 1.0.8 - June 11, 2014 =
+* Added confirmation dialogue when deleting the sidebar area
 
 = 1.0.7 - May 22, 2014 =
 * Added compatibilty with Widget Customizer

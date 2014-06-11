@@ -3,7 +3,7 @@
  * Plugin Name: Stag Custom Sidebars
  * Plugin URI: http://wordpress.org/plugins/stag-custom-sidebars
  * Description: Create custom dynamic sidebars and use anywhere with shortcodes.
- * Version: 1.0.7
+ * Version: 1.0.8
  * Author: Ram Ratan Maurya
  * Author URI: http://mauryaratan.me
  * Requires at least: 3.3
@@ -21,21 +21,21 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
  *
  * @package Stag_Custom_Sidebars
  * @author Ram Ratan Maurya
- * @version 1.0.7
+ * @version 1.0.8
  * @copyright 2014 Ram Ratan Maurya
  */
 final class Stag_Custom_Sidebars {
 
 	/**
 	 * @var Stag_Custom_Sidebars The single instance of the class
-	 * @since 1.0.7
+	 * @since 1.0.0
 	 */
 	protected static $_instance = null;
 
 	/**
 	 * @var string
 	 */
-	public $version = '1.0.7';
+	public $version = '1.0.8';
 
 	/**
 	 * @var string
@@ -140,7 +140,8 @@ final class Stag_Custom_Sidebars {
 		wp_enqueue_script( 'stag-custom-sidebars', $this->plugin_url() . '/assets/js/stag-custom-sidebars.js', array('jquery'), $this->version, true );
 
 		wp_localize_script( 'stag-custom-sidebars', 'objectL10n', array(
-			'shortcode' => __( 'Shortcode', 'stag' )
+			'shortcode'           => __( 'Shortcode', 'stag' ),
+			'delete_sidebar_area' => __( 'Are you sure you want to delete this sidebar?', 'stag' )
 		) );
 
 		if ( true === version_compare( $wp_version, '3.7.9', '>' ) ) {
