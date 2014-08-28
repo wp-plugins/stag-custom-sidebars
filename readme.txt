@@ -3,7 +3,7 @@ Contributors: mauryaratan, codestag
 Donate link: http://codest.ag/scs-donate
 Tags: sidebars, custom-sidebars, mauryaratan, codestag, shortcodes, widgets
 Requires at least: 3.3
-Stable tag: 1.0.8
+Stable tag: 1.0.9
 Tested up to: 4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -24,7 +24,7 @@ We have added compatibility with [Widget Importer & Exporter](https://wordpress.
 
 If you'd like to check out the code and contribute, [join us on GitHub](https://github.com/mauryaratan/stag-custom-sidebars). Pull requests, issues, and plugin recommendations are more than welcome!
 
-*Checkout our finely tuned WordPress themes over at [Codestag](http://codestag.com).*
+*Checkout our finely tuned WordPress themes over at [Codestag](https://codestag.com).*
 
 == Installation ==
 
@@ -61,6 +61,11 @@ Bugs can be reported either in our support forum or preferably on the [Stag Cust
 2. As usual, new widget area appears to right of the screen along with a button to delete the widget area with a shortcode in description to use it anywhere.
 
 == Changelog ==
+
+= 1.0.9 - August 28, 2014 =
+* Ensure compatibility with WordPress 4.0
+* Fix an issue where plugin caused an error on customizer screen when no custom sidebars are created
+* Introduced a new filter, to filter every registered sidebar arguments
 
 = 1.0.8 - June 11, 2014 =
 * Added confirmation dialogue when deleting the sidebar area

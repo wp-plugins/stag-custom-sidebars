@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Stag Custom Sidebars
- * Plugin URI: http://wordpress.org/plugins/stag-custom-sidebars
+ * Plugin URI: https://wordpress.org/plugins/stag-custom-sidebars
  * Description: Create custom dynamic sidebars and use anywhere with shortcodes.
- * Version: 1.0.8
+ * Version: 1.0.9
  * Author: Ram Ratan Maurya
- * Author URI: http://mauryaratan.me
+ * Author URI: https://mauryaratan.me
  * Requires at least: 3.3
  * Tested up to: 4.0
  * License: GPLv2 or later
@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
  *
  * @package Stag_Custom_Sidebars
  * @author Ram Ratan Maurya
- * @version 1.0.8
+ * @version 1.0.9
  * @copyright 2014 Ram Ratan Maurya
  */
 final class Stag_Custom_Sidebars {
@@ -35,7 +35,7 @@ final class Stag_Custom_Sidebars {
 	/**
 	 * @var string
 	 */
-	public $version = '1.0.8';
+	public $version = '1.0.9';
 
 	/**
 	 * @var string
@@ -278,10 +278,14 @@ final class Stag_Custom_Sidebars {
 
 		if( is_array( $sidebars ) ) {
 			foreach( $sidebars as $sidebar ) {
-				$args['id']    = sanitize_title_with_dashes( $sidebar );
 				$args['name']  = $sidebar;
+
+				$sidebar = sanitize_title_with_dashes( $sidebar );
+
+				$args['id']    = $sidebar;
 				$args['class'] = 'stag-custom';
-				register_sidebar($args);
+
+				register_sidebar( apply_filters( 'scs_widget_args_' . $sidebar, $args ) );
 			}
 		}
 	}
@@ -323,7 +327,7 @@ final class Stag_Custom_Sidebars {
 	 * Inject all custom sidebar areas created on site under export data of "Widget Importer and Exporter".
 	 *
 	 * @uses Widget_Importer_Exporter
-	 * @link http://wordpress.org/plugins/widget-importer-exporter
+	 * @link https://wordpress.org/plugins/widget-importer-exporter
 	 *
 	 * @since 1.0.6
 	 * @param  array $sidebars An array containing sidebars' widget data.
@@ -342,7 +346,7 @@ final class Stag_Custom_Sidebars {
 	 * Delete custom array key before 'Widget Importer & Exporter' import.
 	 *
 	 * @uses Widget_Importer_Exporter
-	 * @link http://wordpress.org/plugins/widget-importer-exporter
+	 * @link https://wordpress.org/plugins/widget-importer-exporter
 	 *
 	 * @since 1.0.6
 	 * @param  array $results An array containing sidebars' widget data.
@@ -400,6 +404,8 @@ final class Stag_Custom_Sidebars {
 	function customize_controls_print_scripts() {
 		// Get custom sidebar keys
 		$sidebars = array_keys( get_option('stag_custom_sidebars') );
+
+		if ( ! is_array( $sidebars ) ) return;
 
 		echo "<style type='text/css'>\n";
 		foreach ( $sidebars as $sidebar_id ) :
