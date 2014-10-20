@@ -3,7 +3,7 @@
  * Plugin Name: Stag Custom Sidebars
  * Plugin URI: https://wordpress.org/plugins/stag-custom-sidebars
  * Description: Create custom dynamic sidebars and use anywhere with shortcodes.
- * Version: 1.0.10
+ * Version: 1.0.11
  * Author: Ram Ratan Maurya
  * Author URI: https://mauryaratan.me
  * Requires at least: 3.3
@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
  *
  * @package Stag_Custom_Sidebars
  * @author Ram Ratan Maurya
- * @version 1.0.10
+ * @version 1.0.11
  * @copyright 2014 Ram Ratan Maurya
  */
 final class Stag_Custom_Sidebars {
@@ -35,7 +35,7 @@ final class Stag_Custom_Sidebars {
 	/**
 	 * @var string
 	 */
-	public $version = '1.0.10';
+	public $version = '1.0.11';
 
 	/**
 	 * @var string
@@ -304,13 +304,13 @@ final class Stag_Custom_Sidebars {
 
 		$output = '';
 
-		if ( is_active_sidebar( $id ) ) {
+		if ( is_active_sidebar( $atts['id'] ) ) {
 			ob_start();
 
-			do_action( 'stag_custom_sidebars_before', $id );
+			do_action( 'stag_custom_sidebars_before', $atts['id'] );
 
-			echo "<section id='{$id}' class='stag-custom-widget-area {$class}'>";
-			dynamic_sidebar( $id );
+			echo "<section id='{$atts['id']}' class='stag-custom-widget-area {$atts['class']}'>";
+			dynamic_sidebar( $atts['id'] );
 			echo '</section>';
 
 			do_action( 'stag_custom_sidebars_after' );
